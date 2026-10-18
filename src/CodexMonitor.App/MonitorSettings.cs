@@ -5,6 +5,7 @@ namespace CodexMonitor_App;
 public sealed class MonitorSettings
 {
     public bool AlwaysOnTop { get; set; }
+    public int RefreshIntervalSeconds { get; set; } = 60;
 
     public static MonitorSettings Load(string directory)
     {
@@ -12,6 +13,7 @@ public sealed class MonitorSettings
         {
             string path = Path.Combine(directory, "settings.json");
             var settings = JsonSerializer.Deserialize<MonitorSettings>(File.ReadAllText(path)) ?? new();
+            settings.RefreshIntervalSeconds = Math.Clamp(settings.RefreshIntervalSeconds, 1, 99999);
             return settings;
         }
         catch (Exception e) when (e is IOException or JsonException or UnauthorizedAccessException) { return new(); }

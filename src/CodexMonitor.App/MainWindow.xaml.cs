@@ -21,7 +21,7 @@ public sealed partial class MainWindow : Window
     private readonly OverlappedPresenter _presenter;
     private readonly DispatcherTimer _displayTimer = new() { Interval = TimeSpan.FromSeconds(1) };
     private readonly DispatcherTimer _scanTimer = new() { Interval = TimeSpan.FromSeconds(2) };
-    private readonly DispatcherTimer _quotaTimer = new() { Interval = TimeSpan.FromSeconds(15) };
+    private readonly DispatcherTimer _quotaTimer = new() { Interval = TimeSpan.FromSeconds(60) };
     private readonly DispatcherTimer _dragTimer = new() { Interval = TimeSpan.FromMilliseconds(8) };
     private readonly BarAnimator _bars = new();
     private CodexAppServerClient? _client;
@@ -57,6 +57,7 @@ public sealed partial class MainWindow : Window
         DragSurface.PointerCanceled += DragSurface_PointerReleased;
         _dragTimer.Tick += (_, _) => PollPointerAction();
         _settings = MonitorSettings.Load(_dataDirectory);
+        _quotaTimer.Interval = TimeSpan.FromSeconds(_settings.RefreshIntervalSeconds);
         _history = new TokenHistory(_codexHome, _dataDirectory);
         _quotaCache = new QuotaCache(_dataDirectory);
         var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico");
@@ -216,19 +217,19 @@ public sealed partial class MainWindow : Window
             _bars.Set(bar, 0);
             return;
         }
-        if (fetched is { } lastCheck && now - lastCheck > TimeSpan.FromMinutes(2))
+        if (fetched is { } lastCheck && now - lastCheck >
+            TimeSpan.FromSeconds(Math.Max(120, 2 * _settings.RefreshIntervalSeconds)))
         {
             percentage.Text = "--";
-            reset.Text = "Quota data stale · checked " + lastCheck.ToLocalTime().ToString("HH:mm");
+            reset.Text = "Quota data stale";
             _bars.Set(bar, 0);
             return;
         }
         percentage.Text = $"{quota.UsedPercent:0.#}% used";
-        string checkedAt = fetched is { } time ? " · checked " + time.ToLocalTime().ToString("HH:mm") : "";
         string cached = _quotaError is null ? "" : " · cached";
         reset.Text = (quota.ResetsAt is { } at ? "Resets in " + FormatRemaining(at - now) : "Reset time unavailable")
-                     + checkedAt + cached;
-        ToolTipService.SetToolTip(percentage, $"{quota.UsedPercent:0.#}% used · {100 - quota.UsedPercent:0.#}% remaining{checkedAt}{cached}");
+                     + cached;
+        ToolTipService.SetToolTip(percentage, $"{quota.UsedPercent:0.#}% used · {100 - quota.UsedPercent:0.#}% remaining{cached}");
         _bars.Set(bar, quota.UsedPercent);
     }
 
@@ -281,6 +282,13 @@ public sealed partial class MainWindow : Window
     private void ApplySettings()
     {
         _settings.Save(_dataDirectory);
+        var refreshInterval = TimeSpan.FromSeconds(_settings.RefreshIntervalSeconds);
+        if (_quotaTimer.Interval != refreshInterval)
+        {
+            _quotaTimer.Stop();
+            _quotaTimer.Interval = refreshInterval;
+            _quotaTimer.Start();
+        }
         _presenter.IsAlwaysOnTop = _settings.AlwaysOnTop;
         WindowChrome.ApplyRoundedBorderless(this);
         _speedWindow?.SetTopmost(_settings.AlwaysOnTop);

@@ -23,13 +23,15 @@ public sealed partial class SettingsWindow : Window
         _presenter.IsAlwaysOnTop = settings.AlwaysOnTop;
         AppWindow.SetPresenter(_presenter);
         double scale = GetDpiForWindow(WinRT.Interop.WindowNative.GetWindowHandle(this)) / 96.0;
-        AppWindow.Resize(new SizeInt32((int)Math.Round(370 * scale), (int)Math.Round(132 * scale)));
+        AppWindow.Resize(new SizeInt32((int)Math.Round(370 * scale), (int)Math.Round(184 * scale)));
         WindowChrome.ApplyRoundedBorderless(this);
         AppWindow.Changed += (_, args) => { if (args.DidSizeChange) WindowChrome.ApplyRoundedBorderless(this); };
         Activated += (_, _) => DispatcherQueue.TryEnqueue(() => WindowChrome.ApplyRoundedBorderless(this));
 
         AlwaysOnTopSwitch.IsOn = settings.AlwaysOnTop;
         AlwaysOnTopSwitch.Toggled += AlwaysOnTopSwitch_Toggled;
+        RefreshIntervalBox.Value = settings.RefreshIntervalSeconds;
+        RefreshIntervalBox.ValueChanged += RefreshIntervalBox_ValueChanged;
     }
 
     public void SetTopmost(bool value)
@@ -59,6 +61,16 @@ public sealed partial class SettingsWindow : Window
     private void AlwaysOnTopSwitch_Toggled(object sender, RoutedEventArgs e)
     {
         _settings.AlwaysOnTop = AlwaysOnTopSwitch.IsOn;
+        _settingsChanged();
+    }
+
+    private void RefreshIntervalBox_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs e)
+    {
+        if (!double.IsFinite(e.NewValue)) return;
+        int seconds = (int)Math.Round(Math.Clamp(e.NewValue, 1, 99999));
+        if (RefreshIntervalBox.Value != seconds) RefreshIntervalBox.Value = seconds;
+        if (_settings.RefreshIntervalSeconds == seconds) return;
+        _settings.RefreshIntervalSeconds = seconds;
         _settingsChanged();
     }
 
