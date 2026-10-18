@@ -93,10 +93,10 @@ public sealed class NativeTrayIcon : IDisposable
         nint menu = CreatePopupMenu();
         try
         {
-            AppendMenu(menu, 0, 1, "Show / Hide");
-            AppendMenu(menu, 0, 2, "Refresh now");
+            AppendMenu(menu, 0, 1, UiText.ShowHide);
+            AppendMenu(menu, 0, 2, UiText.RefreshNow);
             AppendMenu(menu, 0x800, 0, null); // MF_SEPARATOR
-            AppendMenu(menu, 0, 3, "Exit");
+            AppendMenu(menu, 0, 3, UiText.Exit);
             GetCursorPos(out var point);
             SetForegroundWindow(_hwnd);
             uint command = TrackPopupMenu(menu, 0x0100 | 0x0002, point.X, point.Y, 0, _hwnd, nint.Zero);

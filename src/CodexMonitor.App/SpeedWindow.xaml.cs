@@ -21,6 +21,14 @@ public sealed partial class SpeedWindow : Window
     public SpeedWindow(bool alwaysOnTop)
     {
         InitializeComponent();
+        Title = UiText.TokenSpeed;
+        SpeedTitle.Text = UiText.TokenSpeed;
+        ToolTipService.SetToolTip(CloseButton, UiText.Close);
+        Range15m.Content = UiText.Period(TimeSpan.FromMinutes(15));
+        Range1h.Content = UiText.Period(TimeSpan.FromHours(1));
+        Range24h.Content = UiText.Period(TimeSpan.FromHours(24));
+        Range3d.Content = UiText.Period(TimeSpan.FromDays(3));
+        Range7d.Content = UiText.Period(TimeSpan.FromDays(7));
         AppWindow.IsShownInSwitchers = false;
         _rangeButtons = [Range15m, Range1h, Range24h, Range3d, Range7d];
         UpdateRangeButtons();
@@ -66,7 +74,7 @@ public sealed partial class SpeedWindow : Window
         _accountKey = accountKey;
         _model = model;
         _now = now;
-        ModelName.Text = model ?? "No active model";
+        ModelName.Text = model ?? UiText.NoActiveModel;
         RenderChart();
     }
 

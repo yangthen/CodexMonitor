@@ -25,13 +25,13 @@
                         <TextBlock x:Name="AccountText" Grid.Column="2" Text="" FontSize="11" Foreground="#7E97A6" VerticalAlignment="Center" />
                         <Button x:Name="SettingsButton" Grid.Column="3" Width="28" Height="28" Padding="0"
                                 HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent"
-                                BorderThickness="0" Click="SettingsButton_Click" ToolTipService.ToolTip="设置">
+                                BorderThickness="0" Click="SettingsButton_Click" ToolTipService.ToolTip="Settings">
                             <FontIcon Glyph="&#xE713;" FontFamily="Segoe Fluent Icons" FontSize="17" Foreground="#8BA2B0" />
                         </Button>
                     </Grid>
                     <Grid Grid.Row="1">
                         <Grid.RowDefinitions><RowDefinition Height="23"/><RowDefinition Height="10"/><RowDefinition Height="20"/></Grid.RowDefinitions>
-                        <Grid><TextBlock Text="5hours" Foreground="#EFF4F6" FontSize="15" VerticalAlignment="Center"/>
+                        <Grid><TextBlock x:Name="FiveHoursLabel" Text="5 hours" Foreground="#EFF4F6" FontSize="15" VerticalAlignment="Center"/>
                             <TextBlock x:Name="FivePercent" Text="--" Foreground="#36D7EA" FontWeight="SemiBold" FontSize="15" HorizontalAlignment="Right" VerticalAlignment="Center"/></Grid>
                         <local:QuotaBar x:Name="FiveBar" Grid.Row="1" VerticalAlignment="Center" />
                         <TextBlock x:Name="FiveReset" Grid.Row="2" Text="Waiting for quota data" Foreground="#8999A6" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
@@ -39,7 +39,7 @@
                     <Border Grid.Row="2" Background="#2C3740"/>
                     <Grid Grid.Row="3">
                         <Grid.RowDefinitions><RowDefinition Height="23"/><RowDefinition Height="10"/><RowDefinition Height="20"/></Grid.RowDefinitions>
-                        <Grid><TextBlock Text="week" Foreground="#EFF4F6" FontSize="15" VerticalAlignment="Center"/>
+                        <Grid><TextBlock x:Name="WeekLabel" Text="Week" Foreground="#EFF4F6" FontSize="15" VerticalAlignment="Center"/>
                             <TextBlock x:Name="WeekPercent" Text="--" Foreground="#36D7EA" FontWeight="SemiBold" FontSize="15" HorizontalAlignment="Right" VerticalAlignment="Center"/></Grid>
                         <local:QuotaBar x:Name="WeekBar" Grid.Row="1" VerticalAlignment="Center" />
                         <TextBlock x:Name="WeekReset" Grid.Row="2" Text="Waiting for quota data" Foreground="#8999A6" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
@@ -54,7 +54,7 @@
                             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                             <TextBlock x:Name="ModelText" Grid.Column="0" Text="" Foreground="#8999A6" FontSize="11"
                                        TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <TextBlock Grid.Column="1" Text="详情  ›"
+                            <TextBlock x:Name="DetailsLabel" Grid.Column="1" Text="Details  ›"
                                        Foreground="#8999A6" FontSize="11" VerticalAlignment="Center"/>
                         </Grid>
                     </Grid>

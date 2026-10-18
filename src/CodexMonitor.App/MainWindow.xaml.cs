@@ -47,6 +47,12 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        FiveHoursLabel.Text = UiText.FiveHours;
+        WeekLabel.Text = UiText.Week;
+        DetailsLabel.Text = UiText.Details;
+        FiveReset.Text = UiText.WaitingForQuota;
+        WeekReset.Text = UiText.WaitingForQuota;
+        ToolTipService.SetToolTip(SettingsButton, UiText.Settings);
         DragSurface.AddHandler(UIElement.PointerPressedEvent,
             new PointerEventHandler(DragSurface_PointerPressed), handledEventsToo: true);
         DragSurface.AddHandler(UIElement.PointerMovedEvent,
@@ -111,7 +117,7 @@ public sealed partial class MainWindow : Window
             UpdateDisplay();
             if (newSamples) _ = RefreshQuotaAsync();
         }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException) { ModelText.Text = "Session data unavailable"; }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException) { ModelText.Text = UiText.SessionDataUnavailable; }
         finally { _scanBusy = false; }
     }
 
@@ -122,7 +128,7 @@ public sealed partial class MainWindow : Window
         _accountKey = key;
         _quota = key is null ? null : _quotaCache.Get(key);
         _model = key is null ? null : _history.LatestModel(key);
-        AccountText.Text = key is null ? "No ChatGPT account" : "Account " + key[..6];
+        AccountText.Text = key is null ? UiText.NoChatGptAccount : UiText.Account(key[..6]);
         if (key is not null) _ = RefreshQuotaAsync();
     }
 
@@ -144,8 +150,8 @@ public sealed partial class MainWindow : Window
             }
             if (!await _client.IsChatGptAccountAsync())
             {
-                FiveReset.Text = "Sign in with ChatGPT";
-                WeekReset.Text = "Sign in with ChatGPT";
+                FiveReset.Text = UiText.SignInWithChatGpt;
+                WeekReset.Text = UiText.SignInWithChatGpt;
                 return;
             }
             var snapshot = await _client.ReadQuotasAsync();
@@ -161,7 +167,7 @@ public sealed partial class MainWindow : Window
         catch (Exception e) when (e is IOException or InvalidOperationException or TimeoutException or System.ComponentModel.Win32Exception)
         {
             _quotaError = e.Message;
-            Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(AccountText, "Quota: " + _quotaError);
+            Microsoft.UI.Xaml.Controls.ToolTipService.SetToolTip(AccountText, UiText.QuotaFetchFailed);
             try { File.AppendAllText(Path.Combine(_dataDirectory, "monitor.log"), $"{DateTimeOffset.Now:O} quota: {e.GetType().Name}: {e.Message}{Environment.NewLine}"); } catch (IOException) { }
             if (_client is not null) await _client.DisposeAsync();
             _client = null;
@@ -188,14 +194,14 @@ public sealed partial class MainWindow : Window
         double? speed = _accountKey is not null && _model is not null
             ? _history.LatestTokensPerSecond(_accountKey, _model, now) : null;
         SpeedText.Text = speed is { } rate ? $"{rate:0.0} tokens/s" : "--";
-        ModelText.Text = _model is null ? "" : "Model: " + _model;
+        ModelText.Text = _model is null ? "" : UiText.Model(_model);
         ToolTipService.SetToolTip(ModelText, _model);
         MainSpeedChart.SetData(_accountKey is not null && _model is not null
             ? _history.SpeedSeries(_accountKey, _model, TimeSpan.FromMinutes(5), now)
             : [], TimeSpan.FromMinutes(5), now);
         _speedWindow?.Update(_history, _accountKey, _model, now);
         string tip = _model is null ? "Codex Monitor" :
-            $"Codex Monitor | {_model} | {(speed is { } value ? $"{value:0.0} tokens/s" : "speed unavailable")}";
+            $"Codex Monitor | {_model} | {(speed is { } value ? $"{value:0.0} tokens/s" : UiText.SpeedUnavailable)}";
         _tray.SetTooltip(tip);
     }
 
@@ -214,7 +220,7 @@ public sealed partial class MainWindow : Window
         if (quota is null)
         {
             percentage.Text = "--";
-            reset.Text = _quota is null ? (_quotaError is null ? "Waiting for quota data" : "Quota unavailable") : "Unavailable for this plan";
+            reset.Text = _quota is null ? (_quotaError is null ? UiText.WaitingForQuota : UiText.QuotaUnavailable) : UiText.UnavailableForPlan;
             _bars.Set(bar, 0);
             return;
         }
@@ -222,24 +228,15 @@ public sealed partial class MainWindow : Window
             TimeSpan.FromSeconds(Math.Max(120, 2 * _settings.RefreshIntervalSeconds)))
         {
             percentage.Text = "--";
-            reset.Text = "Quota data stale";
+            reset.Text = UiText.QuotaDataStale;
             _bars.Set(bar, 0);
             return;
         }
-        percentage.Text = $"{quota.UsedPercent:0.#}% used";
-        string cached = _quotaError is null ? "" : " · cached";
-        reset.Text = (quota.ResetsAt is { } at ? "Resets in " + FormatRemaining(at - now) : "Reset time unavailable")
-                     + cached;
-        ToolTipService.SetToolTip(percentage, $"{quota.UsedPercent:0.#}% used · {100 - quota.UsedPercent:0.#}% remaining{cached}");
+        percentage.Text = UiText.PercentUsed(quota.UsedPercent);
+        string cached = _quotaError is null ? "" : UiText.CachedSuffix;
+        reset.Text = UiText.ResetTime(quota.ResetsAt is { } at ? at - now : null) + cached;
+        ToolTipService.SetToolTip(percentage, UiText.QuotaTooltip(quota.UsedPercent, _quotaError is not null));
         _bars.Set(bar, quota.UsedPercent);
-    }
-
-    private static string FormatRemaining(TimeSpan remaining)
-    {
-        if (remaining <= TimeSpan.Zero) return "soon";
-        if (remaining.TotalDays >= 1) return $"{(int)remaining.TotalDays}d {remaining.Hours}h";
-        if (remaining.TotalHours >= 1) return $"{(int)remaining.TotalHours}h {remaining.Minutes}m";
-        return $"{Math.Max(1, (int)Math.Ceiling(remaining.TotalMinutes))}m";
     }
 
     private void SpeedRegion_Tapped(object sender, TappedRoutedEventArgs e)

@@ -14,12 +14,12 @@
                 </Grid.RowDefinitions>
                 <Grid Height="29">
                     <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="32"/></Grid.ColumnDefinitions>
-                    <TextBlock Text="Token speed" Foreground="#F5F7FA" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="SpeedTitle" Text="Token speed" Foreground="#F5F7FA" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     <TextBlock x:Name="ModelName" Grid.Column="1" Foreground="#8BA2B0" FontSize="12"
                                HorizontalAlignment="Right" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="8,0,8,0"/>
-                    <Button Grid.Column="2" HorizontalAlignment="Right" Width="28" Height="28" Padding="0"
+                    <Button x:Name="CloseButton" Grid.Column="2" HorizontalAlignment="Right" Width="28" Height="28" Padding="0"
                             Background="Transparent" BorderThickness="0" Click="CloseButton_Click"
-                            ToolTipService.ToolTip="关闭">
+                            ToolTipService.ToolTip="Close">
                         <FontIcon Glyph="&#xE8BB;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="#DDE6EA" />
                     </Button>
                 </Grid>
@@ -28,11 +28,11 @@
                         <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="Range15m" Grid.Column="0" Content="15分钟" Tag="15m" Click="RangeButton_Click" />
-                    <Button x:Name="Range1h" Grid.Column="1" Content="1小时" Tag="1h" Click="RangeButton_Click" />
-                    <Button x:Name="Range24h" Grid.Column="2" Content="24小时" Tag="24h" Click="RangeButton_Click" />
-                    <Button x:Name="Range3d" Grid.Column="3" Content="3天" Tag="3d" Click="RangeButton_Click" />
-                    <Button x:Name="Range7d" Grid.Column="4" Content="7天" Tag="7d" Click="RangeButton_Click" />
+                    <Button x:Name="Range15m" Grid.Column="0" Content="15 min" Tag="15m" Click="RangeButton_Click" />
+                    <Button x:Name="Range1h" Grid.Column="1" Content="1 hour" Tag="1h" Click="RangeButton_Click" />
+                    <Button x:Name="Range24h" Grid.Column="2" Content="24 hours" Tag="24h" Click="RangeButton_Click" />
+                    <Button x:Name="Range3d" Grid.Column="3" Content="3 days" Tag="3d" Click="RangeButton_Click" />
+                    <Button x:Name="Range7d" Grid.Column="4" Content="7 days" Tag="7d" Click="RangeButton_Click" />
                 </Grid>
                 <local:SpeedChart x:Name="DetailChart" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
             </Grid>

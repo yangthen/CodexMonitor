@@ -64,12 +64,14 @@ public sealed class SpeedChart : Canvas
 
         AddLabel($"{ceiling:0.#}/s", 0, 0);
         AddLabel("0", 25, top + plotHeight - 7);
-        AddLabel(PeriodLabel(_period) + "前", left, height - 15);
-        AddLabel("现在", width - 31, height - 15);
+        AddLabel(UiText.Ago(_period), left, height - 15);
+        AddLabel(UiText.Now, width - 31, height - 15);
 
         if (visible.Count == 0)
         {
-            AddLabel("暂无速度数据", left + plotWidth / 2 - 35, top + plotHeight / 2 - 8);
+            var emptyLabel = AddLabel(UiText.NoSpeedData, left, top + plotHeight / 2 - 8);
+            emptyLabel.Width = plotWidth;
+            emptyLabel.TextAlignment = TextAlignment.Center;
             return;
         }
 
@@ -140,23 +142,14 @@ public sealed class SpeedChart : Canvas
         }
     }
 
-    private void AddLabel(string value, double x, double y)
+    private TextBlock AddLabel(string value, double x, double y)
     {
         var label = new TextBlock { Text = value, FontSize = 10, Foreground = LabelBrush };
         SetLeft(label, x);
         SetTop(label, y);
         Children.Add(label);
+        return label;
     }
-
-    private static string PeriodLabel(TimeSpan period) => period.TotalDays switch
-    {
-        >= 7 => "7天",
-        >= 3 => "3天",
-        >= 1 => "24小时",
-        _ when period.TotalHours >= 1 => "1小时",
-        _ when period.TotalMinutes >= 15 => "15分钟",
-        _ => "5分钟"
-    };
 
     private static Brush Brush(byte r, byte g, byte b) =>
         new SolidColorBrush(Color.FromArgb(255, r, g, b));

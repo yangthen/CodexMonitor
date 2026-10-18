@@ -14,6 +14,11 @@ public sealed partial class SettingsWindow : Window
     public SettingsWindow(MonitorSettings settings, Action settingsChanged)
     {
         InitializeComponent();
+        Title = "Codex Monitor " + UiText.Settings;
+        SettingsTitle.Text = UiText.Settings;
+        AlwaysOnTopLabel.Text = UiText.AlwaysOnTop;
+        RefreshFrequencyLabel.Text = UiText.RefreshFrequency;
+        ToolTipService.SetToolTip(CloseButton, UiText.Close);
         AppWindow.IsShownInSwitchers = false;
         _settings = settings;
         _settingsChanged = settingsChanged;
