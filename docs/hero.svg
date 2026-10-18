@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title description">
+  <title id="title">Codex Monitor floating window</title>
+  <desc id="description">Illustration of the dark, rounded Codex Monitor window, showing sample five-hour and weekly quotas and a five-minute output-speed chart.</desc>
+  <defs>
+    <linearGradient id="back" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#07151d"/>
+      <stop offset="0.55" stop-color="#0d1c25"/>
+      <stop offset="1" stop-color="#102531"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop stop-color="#18c7d6" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#18c7d6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#36d7ea" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#36d7ea" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+    <clipPath id="cardClip"><rect x="596" y="88" width="545" height="440" rx="16"/></clipPath>
+  </defs>
+
+  <rect width="1200" height="620" fill="url(#back)"/>
+  <circle cx="908" cy="299" r="400" fill="url(#glow)"/>
+  <path d="M0 523 C258 478 382 605 620 550 S1000 466 1200 541" fill="none" stroke="#53cbd5" stroke-opacity="0.09" stroke-width="2"/>
+  <path d="M0 551 C258 506 382 633 620 578 S1000 494 1200 569" fill="none" stroke="#53cbd5" stroke-opacity="0.05" stroke-width="2"/>
+
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="68" y="110" fill="#4bd5e3" font-size="15" font-weight="700" letter-spacing="3">WINDOWS DESKTOP COMPANION</text>
+    <text x="64" y="218" fill="#f4f8fa" font-size="72" font-weight="700" letter-spacing="-3">Codex</text>
+    <text x="64" y="295" fill="#f4f8fa" font-size="72" font-weight="700" letter-spacing="-3">Monitor</text>
+    <rect x="68" y="327" width="52" height="4" rx="2" fill="#36d7ea"/>
+    <text x="68" y="380" fill="#bfd0d9" font-size="24">Quota and output speed,</text>
+    <text x="68" y="415" fill="#bfd0d9" font-size="24">always a glance away.</text>
+    <rect x="68" y="477" width="146" height="38" rx="19" fill="#19303a"/>
+    <text x="89" y="502" fill="#b9dce2" font-size="15">5h + weekly quota</text>
+    <rect x="226" y="477" width="163" height="38" rx="19" fill="#19303a"/>
+    <text x="248" y="502" fill="#b9dce2" font-size="15">Speed history</text>
+    <text x="68" y="573" fill="#718995" font-size="14">Illustration · sample data</text>
+  </g>
+
+  <rect x="614" y="113" width="527" height="431" rx="17" fill="#01060a" opacity="0.6" filter="url(#shadow)"/>
+  <rect x="596" y="88" width="545" height="440" rx="16" fill="#111b24"/>
+  <g clip-path="url(#cardClip)" font-family="Segoe UI, Arial, sans-serif">
+    <rect x="624" y="117" width="34" height="34" rx="9" fill="#4759d9"/>
+    <path d="M641 122c6 0 10 4 10 9 0 2-1 4-2 6 0 5-4 9-9 9-3 0-5-1-7-3-5-1-8-5-8-10 0-3 2-6 4-8 2-4 6-6 12-3zm-7 7c3-3 7-3 10-1l3 3-9 5m-8-3 10-6m-8 11 12-7m-7 11-1-9 11 6" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="670" y="143" fill="#f5f7fa" font-size="24" font-weight="600">Codex</text>
+    <text x="954" y="139" fill="#8ba2b0" font-size="14">Account demo</text>
+    <g transform="translate(1108 134)" fill="none" stroke="#8ba2b0" stroke-width="2" stroke-linecap="round">
+      <circle r="5"/><path d="M0-12v3M0 9v3M-12 0h3M9 0h3M-8.5-8.5l2.2 2.2M6.3 6.3l2.2 2.2M8.5-8.5 6.3-6.3M-6.3 6.3l-2.2 2.2"/>
+    </g>
+
+    <text x="626" y="199" fill="#eff4f6" font-size="20">5hours</text>
+    <text x="1109" y="199" fill="#36d7ea" font-size="19" font-weight="600" text-anchor="end">42% used</text>
+    <rect x="626" y="218" width="483" height="8" rx="4" fill="#263640"/>
+    <rect x="626" y="218" width="203" height="8" rx="4" fill="#36d7ea"/>
+    <text x="1109" y="249" fill="#8999a6" font-size="15" text-anchor="end">Resets in 2h 18m</text>
+    <path d="M626 267h483" stroke="#2c3740"/>
+
+    <text x="626" y="301" fill="#eff4f6" font-size="20">week</text>
+    <text x="1109" y="301" fill="#36d7ea" font-size="19" font-weight="600" text-anchor="end">18% used</text>
+    <rect x="626" y="320" width="483" height="8" rx="4" fill="#263640"/>
+    <rect x="626" y="320" width="87" height="8" rx="4" fill="#36d7ea"/>
+    <text x="1109" y="351" fill="#8999a6" font-size="15" text-anchor="end">Resets in 4d 7h</text>
+    <path d="M626 369h483" stroke="#2c3740"/>
+
+    <text x="626" y="404" fill="#eff4f6" font-size="20">tokens/s</text>
+    <text x="1109" y="404" fill="#36d7ea" font-size="19" font-weight="600" text-anchor="end">28.4 tokens/s</text>
+    <path d="M626 438h483M626 466h483" stroke="#293a44" stroke-width="1"/>
+    <path d="M626 476 C653 470 664 457 683 461 S718 481 744 467 S783 437 810 448 S849 473 878 453 S917 438 946 447 S991 464 1022 443 S1070 447 1109 420 L1109 480 L626 480Z" fill="url(#chartFill)"/>
+    <path d="M626 476 C653 470 664 457 683 461 S718 481 744 467 S783 437 810 448 S849 473 878 453 S917 438 946 447 S991 464 1022 443 S1070 447 1109 420" fill="none" stroke="#36d7ea" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="626" y="509" fill="#8999a6" font-size="14">Model: gpt-6-sol</text>
+    <text x="1109" y="509" fill="#8999a6" font-size="14" text-anchor="end">Details  ›</text>
+  </g>
+</svg>

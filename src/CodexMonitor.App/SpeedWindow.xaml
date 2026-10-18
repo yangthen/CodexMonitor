@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="CodexMonitor_App.SpeedWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:CodexMonitor_App"
+        Title="Token speed">
+    <Grid Background="#111B24">
+        <Border CornerRadius="12" Background="#111B24" Padding="18,13,18,13">
+            <Grid RowSpacing="9">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="29"/>
+                    <RowDefinition Height="34"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Height="29">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="32"/></Grid.ColumnDefinitions>
+                    <TextBlock Text="Token speed" Foreground="#F5F7FA" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="ModelName" Grid.Column="1" Foreground="#8BA2B0" FontSize="12"
+                               HorizontalAlignment="Right" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="8,0,8,0"/>
+                    <Button Grid.Column="2" HorizontalAlignment="Right" Width="28" Height="28" Padding="0"
+                            Background="Transparent" BorderThickness="0" Click="CloseButton_Click"
+                            ToolTipService.ToolTip="关闭">
+                        <FontIcon Glyph="&#xE8BB;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="#DDE6EA" />
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="1" ColumnSpacing="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="Range15m" Grid.Column="0" Content="15分钟" Tag="15m" Click="RangeButton_Click" />
+                    <Button x:Name="Range1h" Grid.Column="1" Content="1小时" Tag="1h" Click="RangeButton_Click" />
+                    <Button x:Name="Range24h" Grid.Column="2" Content="24小时" Tag="24h" Click="RangeButton_Click" />
+                    <Button x:Name="Range3d" Grid.Column="3" Content="3天" Tag="3d" Click="RangeButton_Click" />
+                    <Button x:Name="Range7d" Grid.Column="4" Content="7天" Tag="7d" Click="RangeButton_Click" />
+                </Grid>
+                <local:SpeedChart x:Name="DetailChart" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

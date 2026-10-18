@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CodexMonitor.App (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "CodexMonitor.App (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

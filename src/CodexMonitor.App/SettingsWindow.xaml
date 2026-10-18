@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="CodexMonitor_App.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Codex Monitor 设置">
+    <Grid Background="#111B24" RequestedTheme="Dark">
+        <Border CornerRadius="12"
+                Background="#111B24" Padding="18,14,18,18">
+            <StackPanel Spacing="14">
+                <Grid Height="28">
+                    <TextBlock Text="设置" Foreground="#F5F7FA" FontSize="17" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                    <Button HorizontalAlignment="Right" Width="28" Height="28" Padding="0"
+                            Background="Transparent" BorderThickness="0" Click="CloseButton_Click"
+                            ToolTipService.ToolTip="关闭">
+                        <FontIcon Glyph="&#xE8BB;" FontFamily="Segoe Fluent Icons" FontSize="12" Foreground="#DDE6EA" />
+                    </Button>
+                </Grid>
+                <Grid Height="38">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="115"/></Grid.ColumnDefinitions>
+                    <TextBlock Text="始终保持在最顶层" Foreground="#E4EBEF" FontSize="14"
+                               VerticalAlignment="Center" />
+                    <ToggleSwitch x:Name="AlwaysOnTopSwitch" Grid.Column="1" HorizontalAlignment="Left"
+                                  VerticalAlignment="Center" OffContent="" OnContent="">
+                        <ToggleSwitch.Resources>
+                            <SolidColorBrush x:Key="ToggleSwitchFillOff" Color="#33424C" />
+                            <SolidColorBrush x:Key="ToggleSwitchFillOffPointerOver" Color="#3C4D58" />
+                            <SolidColorBrush x:Key="ToggleSwitchFillOffPressed" Color="#435560" />
+                            <SolidColorBrush x:Key="ToggleSwitchStrokeOff" Color="#C9D3D9" />
+                            <SolidColorBrush x:Key="ToggleSwitchStrokeOffPointerOver" Color="#E0E8EC" />
+                            <SolidColorBrush x:Key="ToggleSwitchStrokeOffPressed" Color="#FFFFFF" />
+                            <SolidColorBrush x:Key="ToggleSwitchKnobFillOff" Color="#FFFFFF" />
+                            <SolidColorBrush x:Key="ToggleSwitchKnobFillOffPointerOver" Color="#FFFFFF" />
+                            <SolidColorBrush x:Key="ToggleSwitchKnobFillOffPressed" Color="#FFFFFF" />
+                        </ToggleSwitch.Resources>
+                    </ToggleSwitch>
+                </Grid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
