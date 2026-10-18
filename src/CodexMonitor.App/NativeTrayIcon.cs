@@ -24,7 +24,10 @@ public sealed class NativeTrayIcon : IDisposable
         _toggle = toggle;
         _refresh = refresh;
         _exit = exit;
-        _icon = File.Exists(iconPath) ? LoadImage(nint.Zero, iconPath, 1, 0, 0, 0x10 | 0x40) : nint.Zero;
+        uint dpi = GetDpiForWindow(hwnd);
+        int width = GetSystemMetricsForDpi(49, dpi); // SM_CXSMICON
+        int height = GetSystemMetricsForDpi(50, dpi); // SM_CYSMICON
+        _icon = File.Exists(iconPath) ? LoadImage(nint.Zero, iconPath, 1, width, height, 0x10) : nint.Zero;
         if (_icon == nint.Zero)
         {
             var executable = Path.Combine(AppContext.BaseDirectory, "CodexMonitor.App.exe");
@@ -143,6 +146,8 @@ public sealed class NativeTrayIcon : IDisposable
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)] private static extern bool Shell_NotifyIcon(uint message, ref NotifyIconData data);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern nint LoadImage(nint instance, string name, uint type, int width, int height, uint flags);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern nint LoadIcon(nint instance, nint name);
+    [DllImport("user32.dll")] private static extern uint GetDpiForWindow(nint hwnd);
+    [DllImport("user32.dll")] private static extern int GetSystemMetricsForDpi(int index, uint dpi);
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)] private static extern uint ExtractIconEx(string file, int iconIndex, out nint largeIcon, out nint smallIcon, uint icons);
     [DllImport("user32.dll")] private static extern bool DestroyIcon(nint icon);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern uint RegisterWindowMessage(string text);

@@ -5,6 +5,7 @@ Run from any directory: python tools/build_icon_assets.py
 """
 
 from pathlib import Path
+import math
 
 from PIL import Image
 
@@ -24,12 +25,32 @@ def centered(source: Image.Image, width: int, height: int, icon_size: int) -> Im
     return canvas
 
 
+def tray_mark(source: Image.Image) -> Image.Image:
+    # Ignore near-transparent extraction noise, then fill about 88% of the tray canvas.
+    visible = source.getchannel("A").point(lambda alpha: 255 if alpha >= 4 else 0)
+    bounds = visible.getbbox()
+    if bounds is None:
+        raise ValueError("The tray artwork is empty")
+    left, top, right, bottom = bounds
+    side = math.ceil(max(right - left, bottom - top) / 0.88)
+    center_x = (left + right) / 2
+    center_y = (top + bottom) / 2
+    crop_left = round(center_x - side / 2)
+    crop_top = round(center_y - side / 2)
+    return source.crop((crop_left, crop_top, crop_left + side, crop_top + side))
+
+
 def main() -> None:
     source = Image.open(SOURCE).convert("RGBA")
     source.save(
         ASSETS / "AppIcon.ico",
         format="ICO",
         sizes=[(size, size) for size in (16, 20, 24, 32, 40, 48, 64, 128, 256)],
+    )
+    tray_mark(source).save(
+        ASSETS / "TrayIcon.ico",
+        format="ICO",
+        sizes=[(size, size) for size in (16, 20, 24, 32, 40, 48, 64)],
     )
     sizes = {
         "LockScreenLogo.scale-200.png": 48,

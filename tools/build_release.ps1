@@ -52,7 +52,7 @@ if ($LASTEXITCODE -ne 0) { throw "dotnet clean failed with exit code $LASTEXITCO
     "-p:PublishDir=$publishDir\"
 if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed with exit code $LASTEXITCODE" }
 
-foreach ($requiredFile in @('CodexMonitor.App.exe', 'Assets\AppIcon.ico', 'Assets\CodexKnotWhite.png')) {
+foreach ($requiredFile in @('CodexMonitor.App.exe', 'Assets\AppIcon.ico', 'Assets\TrayIcon.ico', 'Assets\CodexKnotWhite.png')) {
     if (-not (Test-Path -LiteralPath (Join-Path $publishDir $requiredFile))) {
         throw "Required release file was not published: $requiredFile"
     }
