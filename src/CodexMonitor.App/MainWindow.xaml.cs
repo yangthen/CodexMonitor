@@ -59,7 +59,9 @@ public sealed partial class MainWindow : Window
         _settings = MonitorSettings.Load(_dataDirectory);
         _history = new TokenHistory(_codexHome, _dataDirectory);
         _quotaCache = new QuotaCache(_dataDirectory);
-        AppWindow.SetIcon("Assets/AppIcon.ico");
+        var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico");
+        AppWindow.SetIcon(iconPath);
+        AppWindow.IsShownInSwitchers = false;
         _presenter = OverlappedPresenter.Create();
         _presenter.SetBorderAndTitleBar(false, false);
         _presenter.IsResizable = false;
@@ -80,7 +82,6 @@ public sealed partial class MainWindow : Window
         Activated += (_, _) => DispatcherQueue.TryEnqueue(() => WindowChrome.ApplyRoundedBorderless(this));
         RestorePosition();
 
-        var iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico");
         _tray = new NativeTrayIcon(WinRT.Interop.WindowNative.GetWindowHandle(this), iconPath,
             ToggleVisible, () => _ = RefreshQuotaAsync(), Exit);
 

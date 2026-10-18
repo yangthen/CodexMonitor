@@ -25,6 +25,15 @@ public sealed class NativeTrayIcon : IDisposable
         _refresh = refresh;
         _exit = exit;
         _icon = File.Exists(iconPath) ? LoadImage(nint.Zero, iconPath, 1, 0, 0, 0x10 | 0x40) : nint.Zero;
+        if (_icon == nint.Zero)
+        {
+            var executable = Path.Combine(AppContext.BaseDirectory, "CodexMonitor.App.exe");
+            if (ExtractIconEx(executable, 0, out var large, out var small, 1) > 0)
+            {
+                _icon = small != nint.Zero ? small : large;
+                if (small != nint.Zero && large != nint.Zero) DestroyIcon(large);
+            }
+        }
         _ownsIcon = _icon != nint.Zero;
         if (_icon == nint.Zero) _icon = LoadIcon(nint.Zero, (nint)32512);
         _subclass = WindowProc;
@@ -134,6 +143,7 @@ public sealed class NativeTrayIcon : IDisposable
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)] private static extern bool Shell_NotifyIcon(uint message, ref NotifyIconData data);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern nint LoadImage(nint instance, string name, uint type, int width, int height, uint flags);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern nint LoadIcon(nint instance, nint name);
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode)] private static extern uint ExtractIconEx(string file, int iconIndex, out nint largeIcon, out nint smallIcon, uint icons);
     [DllImport("user32.dll")] private static extern bool DestroyIcon(nint icon);
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] private static extern uint RegisterWindowMessage(string text);
     [DllImport("user32.dll")] private static extern nint CreatePopupMenu();

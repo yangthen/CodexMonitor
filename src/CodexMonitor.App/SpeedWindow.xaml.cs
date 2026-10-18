@@ -21,6 +21,7 @@ public sealed partial class SpeedWindow : Window
     public SpeedWindow(bool alwaysOnTop)
     {
         InitializeComponent();
+        AppWindow.IsShownInSwitchers = false;
         _rangeButtons = [Range15m, Range1h, Range24h, Range3d, Range7d];
         UpdateRangeButtons();
         _presenter = OverlappedPresenter.Create();
