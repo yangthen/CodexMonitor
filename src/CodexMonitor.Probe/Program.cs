@@ -97,6 +97,27 @@ static void RunSelfTest()
         history.Scan(now.AddSeconds(5));
         Check(Math.Abs(history.LatestTokensPerSecond(a, "gpt-6-sol", now.AddSeconds(5))!.Value - 40.0 / 3) < 0.0001,
               "new checkpoint replaces the displayed speed");
+        // The same rollout keeps account A in session_meta after login switches to B.
+        File.AppendAllLines(Path.Combine(sessions, "a.jsonl"),
+        [
+            Line(now.AddSeconds(7), "event_msg", new { type = "task_started" }),
+            Line(now.AddSeconds(8), "event_msg", new { type = "token_count", info = new { total_token_usage = new { output_tokens = 1055 }, last_token_usage = new { output_tokens = 25 } } }),
+            Line(now.AddSeconds(10), "event_msg", new { type = "token_count", info = new { total_token_usage = new { output_tokens = 1115 } } })
+        ]);
+        Check(history.Scan(now.AddSeconds(11), b), "new account output detected in existing rollout");
+        Check(history.LatestModel(b) == "gpt-6-sol", "existing rollout updates the new account model");
+        Check(history.LatestTokensPerSecond(b, "gpt-6-sol", now.AddSeconds(11)) == 30,
+              "new account receives live speed without a cross-account token spike");
+        Check(history.LatestTokensPerSecond(a, "gpt-6-sol", now.AddSeconds(11)) == 40.0 / 3,
+              "old account retains only its earlier speed samples");
+        File.AppendAllLines(Path.Combine(sessions, "a.jsonl"),
+        [
+            Line(now.AddSeconds(13), "event_msg", new { type = "task_started" }),
+            Line(now.AddSeconds(14), "event_msg", new { type = "token_count", info = new { total_token_usage = new { output_tokens = 20 }, last_token_usage = new { output_tokens = 20 } } })
+        ]);
+        Check(history.Scan(now.AddSeconds(15), a), "switching back produces new samples");
+        Check(history.LatestTokensPerSecond(a, "gpt-6-sol", now.AddSeconds(15)) == 20,
+              "switching back resets the token baseline");
         using var quotaDoc = JsonDocument.Parse("""
             {"rateLimitsByLimitId":{"other":{"primary":{"usedPercent":99,"windowDurationMins":300}},
                                      "codex":{"primary":{"usedPercent":76,"windowDurationMins":300},

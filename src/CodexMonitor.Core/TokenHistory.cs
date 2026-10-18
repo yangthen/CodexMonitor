@@ -90,17 +90,17 @@ public sealed class TokenHistory
         }
     }
 
-    public bool Scan(DateTimeOffset now)
+    public bool Scan(DateTimeOffset now, string? activeAccountKey = null)
     {
         lock (_gate)
         {
             _newSamples = false;
-            ScanCore(now);
+            ScanCore(now, activeAccountKey);
             return _newSamples;
         }
     }
 
-    private void ScanCore(DateTimeOffset now)
+    private void ScanCore(DateTimeOffset now, string? activeAccountKey)
     {
         if (!Directory.Exists(_sessionsDirectory)) return;
         var cutoff = now.AddDays(-7);
@@ -125,6 +125,17 @@ public sealed class TokenHistory
                     dirty = true;
                 }
                 if (info.Length == checkpoint.Offset) continue;
+                // A rollout keeps its original session_meta when the user changes accounts.
+                // Reassign only newly appended records in an already scanned file.
+                if (checkpoint.Offset > 0 && activeAccountKey is not null &&
+                    checkpoint.AccountKey is not null && checkpoint.AccountKey != activeAccountKey)
+                {
+                    checkpoint.AccountKey = activeAccountKey;
+                    checkpoint.LastOutputTotal = 0;
+                    checkpoint.LastCountAt = null;
+                    checkpoint.LastTaskStartedAt = null;
+                    dirty = true;
+                }
                 long previousOffset = checkpoint.Offset;
                 ScanFile(path, checkpoint, cutoff);
                 if (checkpoint.Offset != previousOffset) dirty = true;
@@ -236,6 +247,10 @@ public sealed class TokenHistory
                 !root.TryGetProperty("timestamp", out var timeValue) ||
                 !DateTimeOffset.TryParse(timeValue.GetString(), out var timestamp)) return;
             long total = totalValue.GetInt64();
+            if (checkpoint.Model.StartsWith("gpt-", StringComparison.OrdinalIgnoreCase) &&
+                checkpoint.AccountKey is { } modelAccount &&
+                (!_state.LatestModels.TryGetValue(modelAccount, out var latestModel) || timestamp > latestModel.At))
+                _state.LatestModels[modelAccount] = new(checkpoint.Model, timestamp);
             var previousAt = checkpoint.LastCountAt;
             long delta = previousAt is null
                 ? usage.TryGetProperty("last_token_usage", out var lastUsage) &&

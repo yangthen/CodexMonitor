@@ -112,7 +112,8 @@ public sealed partial class MainWindow : Window
         _scanBusy = true;
         try
         {
-            bool newSamples = await Task.Run(() => _history.Scan(DateTimeOffset.UtcNow));
+            string? activeAccountKey = AccountIdentity.ReadKey(_codexHome);
+            bool newSamples = await Task.Run(() => _history.Scan(DateTimeOffset.UtcNow, activeAccountKey));
             UpdateAccount();
             UpdateDisplay();
             if (newSamples) _ = RefreshQuotaAsync();
