@@ -11,6 +11,7 @@ public sealed class NativeTrayIcon : IDisposable
     private readonly nint _icon;
     private readonly bool _ownsIcon;
     private readonly SubclassProc _subclass;
+    private readonly Action _activate;
     private readonly Action _toggle;
     private readonly Action _refresh;
     private readonly Action _exit;
@@ -18,9 +19,10 @@ public sealed class NativeTrayIcon : IDisposable
     private string _tooltip = "Codex Monitor";
     private bool _disposed;
 
-    public NativeTrayIcon(nint hwnd, string iconPath, Action toggle, Action refresh, Action exit)
+    public NativeTrayIcon(nint hwnd, string iconPath, Action activate, Action toggle, Action refresh, Action exit)
     {
         _hwnd = hwnd;
+        _activate = activate;
         _toggle = toggle;
         _refresh = refresh;
         _exit = exit;
@@ -81,7 +83,11 @@ public sealed class NativeTrayIcon : IDisposable
         if (message == CallbackMessage)
         {
             uint mouseMessage = (uint)(lParam.ToInt64() & 0xFFFF);
-            if (mouseMessage is 0x0203 or 0x0400) _toggle(); // double click / NIN_SELECT
+            if (mouseMessage is 0x0202 or 0x0203 or 0x0400 or 0x0401) // left button up / double click / NIN_SELECT / NIN_KEYSELECT
+            {
+                _activate();
+                SetForegroundWindow(_hwnd);
+            }
             else if (mouseMessage is 0x0205 or 0x007B) ShowMenu(); // right click / context menu
             return 0;
         }

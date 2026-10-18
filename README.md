@@ -10,7 +10,7 @@ A Windows floating window for Codex usage. It stays in the system tray when you 
 
 - **Quota:** 5-hour and weekly usage, progress bars, and reset times.
 - **Output speed:** estimated tokens/s from local Codex sessions, with a smooth 5-minute chart. Open the detail view for 15 minutes, 1 hour, 24 hours, 3 days, or 7 days.
-- **A window that fits your desktop:** drag to move, resize from the edges, and optionally keep it on top. Double-click the tray icon to show or hide it.
+- **A window that fits your desktop:** drag to move, resize from the edges, and optionally keep it on top. Click the tray icon to show or bring it forward; use the tray menu to hide it.
 
 ## Run locally
 

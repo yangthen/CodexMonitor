@@ -91,7 +91,7 @@ public sealed partial class MainWindow : Window
         RestorePosition();
 
         _tray = new NativeTrayIcon(WinRT.Interop.WindowNative.GetWindowHandle(this), trayIconPath,
-            ToggleVisible, () => _ = RefreshQuotaAsync(), Exit);
+            ActivateFromTray, ToggleVisible, () => _ = RefreshQuotaAsync(), Exit);
 
         _displayTimer.Tick += (_, _) => UpdateDisplay();
         _scanTimer.Tick += (_, _) => _ = ScanHistoryAsync();
@@ -455,6 +455,12 @@ public sealed partial class MainWindow : Window
         MoveWithPointer(cursor);
         _speedWindow?.PositionNear(AppWindow);
         PositionSettingsNearButton();
+    }
+
+    private void ActivateFromTray()
+    {
+        if (!AppWindow.IsVisible) AppWindow.Show();
+        Activate();
     }
 
     private void ToggleVisible()
